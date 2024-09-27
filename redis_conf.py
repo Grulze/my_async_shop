@@ -5,7 +5,7 @@ from logging import getLogger
 
 logger = getLogger(__name__)
 
-redis = aioredis.from_url("redis://localhost:6379")
+redis = aioredis.from_url("redis://redis:6379")
 
 
 async def check_cache_memory():

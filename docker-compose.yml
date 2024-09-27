@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: db_app
+    command: -p 5444
+    expose:
+      - 5444
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: item_cache
+
+  app:
+    build:
+      context: .
+    container_name: my_shop_app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - redis

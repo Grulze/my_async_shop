@@ -17,7 +17,7 @@ router = APIRouter(prefix="/items", tags=["All items"])
 
 
 @router.get("")
-@cache(60, namespace="all_items")
+@cache(2, namespace="all_items")
 async def get_all_items(pagination: Pagination = Depends()) -> List[GetItems]:
     """
     Returns all items from database with pagination.
@@ -43,7 +43,7 @@ async def get_items(item_id: int) -> List[GetItems]:
     if type(item_id) != int or item_id < 1:
         invalid_id()
 
-    @cache(60, namespace=f"item-{item_id}")
+    @cache(2, namespace=f"item-{item_id}")
     async def send_request_to_db():
         return await get_items_db(item_id_db=item_id)
 
