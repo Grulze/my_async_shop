@@ -1,9 +1,11 @@
 from datetime import datetime
+
 from sqlalchemy import text, inspect
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-async_eng = create_async_engine('postgresql+asyncpg://postgres:postgres@localhost:5432/postgres', echo=True)
+async_eng = create_async_engine(
+    'postgresql+asyncpg://postgres:postgres@localhost:5432/postgres', echo=False)
 
 session = async_sessionmaker(async_eng, expire_on_commit=False)
 
@@ -13,13 +15,13 @@ class Base(DeclarativeBase):
 
 
 class ShopDB(Base):
-    __tablename__ = 'item'
+    __tablename__ = 'items'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(index=True)
     category: Mapped[str]
     manufacturer: Mapped[str]
-    article: Mapped[int] = mapped_column(index=True, unique=True)
+    item_code: Mapped[int] = mapped_column(index=True, unique=True)
     description: Mapped[str]
     price: Mapped[int]
     quantity: Mapped[int]

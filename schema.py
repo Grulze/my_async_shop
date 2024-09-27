@@ -3,25 +3,24 @@ from datetime import datetime
 
 
 class Pagination(BaseModel):
-    limit: int = Field(gt=0)
-    page: int = Field(ge=0)
+    limit: int = Field(gt=0, default=10)
+    page: int = Field(ge=0, default=0)
 
 
 class Items(BaseModel):
     name: str
     category: str
     manufacturer: str
-    article: int
+    item_code: int = Field(gt=0)
     description: str
-    price: int  # int имеется в виду считая от копеек т.е. - 1 р. тут будет равен 100
-    quantity: int
+    price: int = Field(gt=0)  # int имеется в виду считая от копеек т.е. - 1 р. тут будет равен 100
+    quantity: int = Field(ge=0)
 
 
 class AddItems(Items):
     category: str = "all"
     manufacturer: str = "Unknown"
     description: str = "No description"
-    quantity: int = 1
 
 
 class PutItems(Items):
@@ -32,10 +31,10 @@ class PatchItems(PutItems):
     name: str | None = None
     category: str | None = None
     manufacturer: str | None = None
-    article: int | None = None
+    item_code: int | None = Field(gt=0, default=None)
     description: str | None = None
-    price: int | None = None
-    quantity: int | None = None
+    price: int | None = Field(gt=0, default=None)
+    quantity: int | None = Field(gt=0, default=None)
     published: bool | None = None
 
 
