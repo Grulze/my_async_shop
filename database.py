@@ -1,8 +1,11 @@
 from datetime import datetime
+from logging import getLogger
 
-from sqlalchemy import text, inspect
+from sqlalchemy import text, inspect, BigInteger, String
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+logger = getLogger(__name__)
 
 async_eng = create_async_engine(
     'postgresql+asyncpg://postgres:postgres@localhost:5432/postgres', echo=False)
@@ -18,11 +21,11 @@ class ShopDB(Base):
     __tablename__ = 'items'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(index=True)
-    category: Mapped[str]
-    manufacturer: Mapped[str]
-    item_code: Mapped[int] = mapped_column(index=True, unique=True)
-    description: Mapped[str]
+    name = mapped_column(String(50), index=True)
+    category = mapped_column(String(30))
+    manufacturer = mapped_column(String(30))
+    item_code = mapped_column(BigInteger, index=True, unique=True)
+    description = mapped_column(String(400))
     price: Mapped[int]
     quantity: Mapped[int]
     published: Mapped[bool] = mapped_column(default=True)
@@ -33,9 +36,15 @@ async def create_table():
     """
     Create all tables.
     """
+    logger.info("Checking for tables")
+
     async with async_eng.connect() as conn:
         tables = await conn.run_sync(lambda sync_conn: inspect(sync_conn).get_table_names())
+
+    logger.info("Checking the availability of the necessary tables")
+
     if not (ShopDB.__tablename__ in tables):
         async with async_eng.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
-        print("table was created")
+
+        logger.info("Table was created")
