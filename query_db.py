@@ -13,6 +13,13 @@ logger = getLogger(__name__)
 
 async def get_items_db(item_id_db: int | None = None, lim: int | None = None, page: int | None = None
                        ) -> List[GetItems]:
+    """
+    Retrieves data from the database.
+    :param item_id_db: id of item from database
+    :param lim: quantity of objects to return
+    :param page: offset in sql request
+    :return: List[GetItems]
+    """
     logger.debug("Creating transaction for getting item")
 
     async with session() as ses:
@@ -36,6 +43,10 @@ async def get_items_db(item_id_db: int | None = None, lim: int | None = None, pa
 
 
 async def add_items_db(item: AddItems):
+    """
+    Add data to the database.
+    :param item: class with data to record in database
+    """
     logger.debug("Creating transaction for add item")
 
     async with session() as ses:
@@ -51,6 +62,10 @@ async def add_items_db(item: AddItems):
 
 
 async def update_items_db(item_id_db: int, values):
+    """
+    Update data of item from the database.
+    :param item_id_db: id of item from database
+    """
     logger.debug("Creating transaction for update item")
 
     async with session() as ses:
@@ -61,6 +76,11 @@ async def update_items_db(item_id_db: int, values):
 
 
 async def delete_items_db(item_id_db: int):
+    """
+    Delete data from the database.
+    :param item_id_db: id of item from database
+    """
+
     logger.debug("Creating transaction for delete item")
 
     async with session() as ses:

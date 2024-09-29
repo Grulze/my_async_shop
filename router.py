@@ -17,28 +17,31 @@ router = APIRouter(prefix="/items", tags=["All items"])
 
 
 @router.get("")
-@cache(2, namespace="all_items")
 async def get_all_items(pagination: Pagination = Depends()) -> List[GetItems]:
     """
     Returns all items from database with pagination.
-    :param pagination:
+    :param pagination: class with information that used for pagination
     :return: List[GetItems]
     """
-    logger.debug("The client requested items with pagination: limit - %s, page - %s",
+    logger.debug("Client requested items with pagination: limit - %s, page - %s",
                  pagination.limit, pagination.page)
 
+    @cache(2, namespace="all_items")
+    async def send_request_to_db():
+        return await get_items_db(lim=pagination.limit, page=pagination.page)
+
     await check_cache_memory()
-    return await get_items_db(lim=pagination.limit, page=pagination.page)
+    return await send_request_to_db()
 
 
 @crud_router.get("/{item_id}")
 async def get_items(item_id: int) -> List[GetItems]:
     """
     Returns the item by the specified id from database.
-    :param item_id:
+    :param item_id: id of item from database
     :return: List[GetItem]
     """
-    logger.debug("The client requested item with item_id - %s", item_id)
+    logger.debug("Client requested item with item_id - %s", item_id)
 
     if type(item_id) != int or item_id < 1:
         invalid_id()
@@ -55,10 +58,10 @@ async def get_items(item_id: int) -> List[GetItems]:
 async def new_items(item: AddItems = Depends()):
     """
     Adds a new item to the database.
-    :param item:
+    :param item: class with information that needs to be added to database
     :return: str
     """
-    logger.debug("The client requested to create new item")
+    logger.debug("Client requested to create new item")
 
     await clear_cache_on_update()
     await add_items_db(item)
@@ -68,11 +71,11 @@ async def new_items(item: AddItems = Depends()):
 async def update_items(item_id: int, data: PutItems = Depends()):
     """
     Updates all information about the product with the specified id.
-    :param item_id:
-    :param data:
+    :param item_id: id of item from database
+    :param data: class with information that needs to be updated in database
     :return:
     """
-    logger.debug("The client requested to update item with item_id - %s by method - PUT", item_id)
+    logger.debug("Client requested to update item with item_id - %s by method - PUT", item_id)
 
     if type(item_id) != int or item_id < 1:
         invalid_id()
@@ -85,11 +88,11 @@ async def update_items(item_id: int, data: PutItems = Depends()):
 async def partial_update_items(item_id: int, data: PatchItems = Depends()) -> List[GetItems]:
     """
     Updates partial information about the product with the specified id.
-    :param item_id:
-    :param data:
+    :param item_id: id of item from database
+    :param data: class with a piece of information that needs to be updated in database
     :return:
     """
-    logger.debug("The client requested to update item with item_id - %s by method - PATCH", item_id)
+    logger.debug("Client requested to update item with item_id - %s by method - PATCH", item_id)
 
     if type(item_id) != int or item_id < 1:
         invalid_id()
@@ -103,10 +106,10 @@ async def partial_update_items(item_id: int, data: PatchItems = Depends()) -> Li
 async def delete_items(item_id: int):
     """
     Deletes item with the passed id.
-    :param item_id:
+    :param item_id: id of item from database
     :return: str
     """
-    logger.debug("The client requested to delete item with item_id - %s", item_id)
+    logger.debug("Client requested to delete item with item_id - %s", item_id)
 
     if type(item_id) != int or item_id < 1:
         invalid_id()
