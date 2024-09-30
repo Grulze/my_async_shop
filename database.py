@@ -8,7 +8,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 logger = getLogger(__name__)
 
 async_eng = create_async_engine(
-    'postgresql+asyncpg://postgres:postgres@db:5444/postgres', echo=False)
+    'postgresql+asyncpg://postgres:postgres@db:5432/postgres', echo=False)
 
 session = async_sessionmaker(async_eng, expire_on_commit=False)
 

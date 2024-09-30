@@ -29,7 +29,8 @@ async def get_items_db(item_id_db: int | None = None, lim: int | None = None, pa
             query = select(ShopDB).limit(lim).offset(page * lim)
 
         response = await ses.execute(query)
-        logger.debug("Closing transaction")
+
+    logger.debug("Closing transaction")
 
     task_set = response.scalars().all()
     if not task_set and item_id_db:
@@ -64,6 +65,7 @@ async def add_items_db(item: AddItems):
 async def update_items_db(item_id_db: int, values):
     """
     Update data of item from the database.
+    :param values: new information to be recorded
     :param item_id_db: id of item from database
     """
     logger.debug("Creating transaction for update item")
