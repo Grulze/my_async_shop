@@ -19,7 +19,7 @@ router = APIRouter(prefix="/items", tags=["All items"])
 @router.get("")
 async def get_all_items(pagination: Pagination = Depends()) -> List[GetItems]:
     """
-    Returns all items from database with pagination.
+    Return all items from database with pagination.
     :param pagination: class with information that used for pagination
     :return: List[GetItems]
     """
@@ -37,7 +37,7 @@ async def get_all_items(pagination: Pagination = Depends()) -> List[GetItems]:
 @crud_router.get("/{item_id}")
 async def get_items(item_id: int) -> List[GetItems]:
     """
-    Returns the item by the specified id from database.
+    Return the item by the specified id from database.
     :param item_id: id of item from database
     :return: List[GetItem]
     """
@@ -57,7 +57,7 @@ async def get_items(item_id: int) -> List[GetItems]:
 @crud_router.post("", status_code=201)
 async def new_items(item: AddItems = Depends()):
     """
-    Adds a new item to the database.
+    Add a new item to the database.
     :param item: class with information that needs to be added to database
     :return: str
     """
@@ -70,7 +70,7 @@ async def new_items(item: AddItems = Depends()):
 @crud_router.put("/{item_id}", status_code=204)
 async def update_items(item_id: int, data: PutItems = Depends()):
     """
-    Updates all information about the product with the specified id.
+    Update all information about the product with the specified id.
     :param item_id: id of item from database
     :param data: class with information that needs to be updated in database
     :return:
@@ -87,7 +87,7 @@ async def update_items(item_id: int, data: PutItems = Depends()):
 @crud_router.patch("/{item_id}")
 async def partial_update_items(item_id: int, data: PatchItems = Depends()) -> List[GetItems]:
     """
-    Updates partial information about the product with the specified id.
+    Update partial information about the product with the specified id.
     :param item_id: id of item from database
     :param data: class with a piece of information that needs to be updated in database
     :return:
@@ -105,7 +105,7 @@ async def partial_update_items(item_id: int, data: PatchItems = Depends()) -> Li
 @crud_router.delete("/{item_id}", status_code=204)
 async def delete_items(item_id: int):
     """
-    Deletes item with the passed id.
+    Delete item with the passed id.
     :param item_id: id of item from database
     :return: str
     """

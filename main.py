@@ -26,11 +26,19 @@ basicConfig(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    Create a connection to the cache service and tables in database (if they don't exist).
+    Also, when the service is turned off, it sends a message about this.
+    """
     logger.info("Start service...")
     logger.info("Connection to redis")
+
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+
     logger.info("Connection to database")
+
     await create_table()
+
     logger.info("Service is ready to work")
     yield
     logger.info("Shut down service...")
