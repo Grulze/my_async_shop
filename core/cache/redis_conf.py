@@ -1,11 +1,12 @@
 from fastapi_cache import FastAPICache
 from redis import asyncio as aioredis
+from core.config import REDIS_HOST, REDIS_PORT
 
 from logging import getLogger
 
 logger = getLogger(__name__)
 
-redis = aioredis.from_url("redis://redis:6379")
+redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}")
 
 
 async def check_cache_memory():

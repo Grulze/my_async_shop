@@ -17,6 +17,7 @@ services:
   redis:
     image: redis:7.4-alpine
     container_name: item_cache
+    command: ["redis-server", "--maxmemory", "200mb", "--maxmemory-policy", "allkeys-lru"]
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
@@ -28,6 +29,14 @@ services:
     build:
       context: .
     container_name: my_shop_app
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     ports:
       - 8000:8000
     depends_on:

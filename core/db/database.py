@@ -1,5 +1,6 @@
 from datetime import datetime
 from logging import getLogger
+from core.config import DB_USER, DB_HOST, DB_NAME, DB_PASS, DB_PORT
 
 from sqlalchemy import text, inspect, BigInteger, String
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
@@ -8,7 +9,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 logger = getLogger(__name__)
 
 async_eng = create_async_engine(
-    'postgresql+asyncpg://postgres:postgres@db:5432/postgres', echo=False)
+    f'postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}', echo=False)
 
 session = async_sessionmaker(async_eng, expire_on_commit=False)
 
@@ -17,7 +18,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class ShopDB(Base):
+class ItemsDB(Base):
     __tablename__ = 'items'
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -43,7 +44,7 @@ async def create_table():
 
     logger.info("Checking the availability of the necessary tables")
 
-    if not (ShopDB.__tablename__ in tables):
+    if not (ItemsDB.__tablename__ in tables):
         async with async_eng.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 

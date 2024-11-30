@@ -4,11 +4,11 @@ from logging import getLogger
 from fastapi import APIRouter, Depends
 from fastapi_cache.decorator import cache
 
-from query_db import add_items_db, delete_items_db, get_items_db, update_items_db
-from schema import AddItems, GetItems, PutItems, PatchItems, Pagination
-from custom_exceptions import invalid_id
+from core.db.query_db import add_items_db, delete_items_db, get_items_db, update_items_db
+from core.schemas.schema import AddItems, GetItems, PutItems, PatchItems, Pagination
+from core.custom_exceptions import invalid_id
 
-from redis_conf import check_cache_memory, clear_cache_on_update
+from core.cache.redis_conf import check_cache_memory, clear_cache_on_update
 
 logger = getLogger(__name__)
 

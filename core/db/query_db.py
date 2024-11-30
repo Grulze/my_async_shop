@@ -4,9 +4,9 @@ from logging import getLogger
 from sqlalchemy import select, update, delete
 from sqlalchemy.exc import IntegrityError
 
-from database import ShopDB, session
-from schema import AddItems, GetItems
-from custom_exceptions import non_existent_object, existing_item_code
+from core.db.database import ItemsDB, session
+from core.schemas.schema import AddItems, GetItems
+from core.custom_exceptions import non_existent_object, existing_item_code
 
 logger = getLogger(__name__)
 
@@ -24,9 +24,9 @@ async def get_items_db(item_id_db: int | None = None, lim: int | None = None, pa
 
     async with session() as ses:
         if item_id_db:
-            query = select(ShopDB).where(ShopDB.id == item_id_db)
+            query = select(ItemsDB).where(ItemsDB.id == item_id_db)
         else:
-            query = select(ShopDB).limit(lim).offset(page * lim)
+            query = select(ItemsDB).limit(lim).offset(page * lim)
 
         response = await ses.execute(query)
 
@@ -52,7 +52,7 @@ async def add_items_db(item: AddItems):
 
     async with session() as ses:
         item_data = item.model_dump()
-        item_bd = ShopDB(**item_data)
+        item_bd = ItemsDB(**item_data)
         ses.add(item_bd)
         try:
             await ses.commit()
@@ -71,7 +71,7 @@ async def update_items_db(item_id_db: int, values):
     logger.debug("Creating transaction for update item")
 
     async with session() as ses:
-        await ses.execute(update(ShopDB).where(ShopDB.id == item_id_db).values(values))
+        await ses.execute(update(ItemsDB).where(ItemsDB.id == item_id_db).values(values))
         await ses.commit()
 
     logger.debug("Closing transaction")
@@ -86,7 +86,7 @@ async def delete_items_db(item_id_db: int):
     logger.debug("Creating transaction for delete item")
 
     async with session() as ses:
-        await ses.execute(delete(ShopDB).where(ShopDB.id == item_id_db))
+        await ses.execute(delete(ItemsDB).where(ItemsDB.id == item_id_db))
         await ses.commit()
 
     logger.debug("Closing transaction")
