@@ -96,27 +96,6 @@ Here are the main API endpoints you can use:
   - **Response**: Status `204 No Content`.
 
 
-## Project Structure
-
-Here's an overview of the project's structure:
-
-```
-.
-├── app/
-│   ├── main.py           # FastAPI application entry point
-│   ├── database.py       # SQLAlchemy configuration and models
-│   ├── query_db.py       # Database queries for CRUD operations
-│   ├── redis_conf.py     # Redis configuration and cache management
-│   ├── router.py         # API routes and handlers
-│   ├── schema.py         # Pydantic models for request/response validation
-│   ├── custom_exceptions.py  # Custom error handling
-│   ├── requirements.txt  # List of dependencies
-│   ├── Dockerfile        # Docker configuration for the app
-│   ├── docker-compose.yml # Docker Compose setup for the app, Redis, and PostgreSQL
-│   └── README.md         # Project documentation
-```
-
-
 ## Dependencies
 
 The application requires the following Python dependencies, which are listed in the `requirements.txt` file:
